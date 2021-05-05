@@ -1,5 +1,4 @@
-"require": {
-    "php": ">=7.3.19",
-    "laravel/framework": "4.2.*",
-    "doctrine/dbal": "~2.3" // <--- ’Ç‰ÁI
-},
+{
+    "require": {
+    }
+}

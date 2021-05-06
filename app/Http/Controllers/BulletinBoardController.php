@@ -14,6 +14,7 @@ class BulletinBoardController extends Controller
     public function index()
     {
         //
+        return view('bulletin.index');
     }
 
     /**

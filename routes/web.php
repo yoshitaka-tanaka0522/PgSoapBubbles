@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BulletinBoardController;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::resource('bulletin', BulletinBoardController::class);
-Route::get('bulletin','BulletinBoardController@index');
+Route::resource('bulletin', BulletinBoardController::class);
+//Route::get('bulletin','BulletinBoardController@index');

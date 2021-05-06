@@ -13,8 +13,7 @@ class BulletinBoardController extends Controller
      */
     public function index()
     {
-        //掲示板の初期表示を行う。
-        return view('bulletinboard.index');
+        //
     }
 
     /**

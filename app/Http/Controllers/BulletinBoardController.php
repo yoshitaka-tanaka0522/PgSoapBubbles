@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\BulletinBoard;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Exception;
 
 class BulletinBoardController extends Controller
 {
@@ -13,8 +16,18 @@ class BulletinBoardController extends Controller
      */
     public function index()
     {
-        //
-        return view('bulletin.index');
+        // ------Eroquent(エロクワント)を使用する場合------------------------------
+        // →https://readouble.com/laravel/8.x/ja/eloquent.html
+        // items->attributesにtableのデータが入っている。
+        //  $bulletinBoards = BulletinBoard::all();
+        //  dd($bulletinBoards);
+        // ----------------------------------------------------------
+        //------Facadesを使用する場合(クエリビルダ)------------------------------
+        //use Illuminate\Support\Facades\DB;を追加
+        $bulletinBoards = DB::table('bulletin_boards')
+        ->select('id','language_Type','account_name','title','question','question_id','created_at')
+        ->get();
+        return view('bulletin.index',compact('bulletinBoards'));
     }
 
     /**
@@ -25,6 +38,7 @@ class BulletinBoardController extends Controller
     public function create()
     {
         //
+        return view('bulletin.create');
     }
 
     /**
@@ -35,7 +49,15 @@ class BulletinBoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //https://readouble.com/laravel/8.x/ja/requests.html
+        $bulletin = new BulletinBoard;
+        $bulletin->language_type = $request->input('language_type');
+        $bulletin->account_name = $request->input('account_name');
+        $bulletin->title = $request->input('title');
+        $bulletin->question = $request->input('question');
+        $bulletin->question_id = mt_rand();
+        $bulletin->save();
+        return redirect('/bulletin');
     }
 
     /**
@@ -46,7 +68,19 @@ class BulletinBoardController extends Controller
      */
     public function show($id)
     {
-        //
+        //https://readouble.com/laravel/8.x/ja/eloquent-collections.html(find)
+        $bulletin = BulletinBoard::find($id);
+        //もし値によって、表示する内容を変えたかった場合(0は男性、1は女性みたいな)
+        //変数に新たに格納してcompactに引数増やして渡す。
+        // if($bulletin->age === 0) {
+        //     $gender = '男性';
+        // }
+        // if($bulletin->age === 1) {
+        //     $gender = '女性';
+        // }
+        return view('bulletin.show',compact('bulletin'));
+        //もし↑のgederを渡したかったら以下のように書く
+        // return view('bulletin.show',compact('bulletin','gender'));
     }
 
     /**
@@ -57,7 +91,9 @@ class BulletinBoardController extends Controller
      */
     public function edit($id)
     {
-        //
+        //editもshowの時同様に1件のデータがあればいい
+        $bulletin = BulletinBoard::find($id);
+        return view('bulletin.edit',compact('bulletin'));
     }
 
     /**
@@ -69,7 +105,14 @@ class BulletinBoardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //updateは1件のデータに対してstoreの時と同様の処理を行う。
+        $bulletin = BulletinBoard::find($id);
+        $bulletin->language_type = $request->input('language_type');
+        $bulletin->account_name = $request->input('account_name');
+        $bulletin->title = $request->input('title');
+        $bulletin->question = $request->input('question');        
+        $bulletin->save();
+        return redirect('/bulletin');
     }
 
     /**
@@ -81,5 +124,8 @@ class BulletinBoardController extends Controller
     public function destroy($id)
     {
         //
+        $bulletin = BulletinBoard::find($id);
+        $bulletin->delete();
+        return redirect('/bulletin');
     }
 }

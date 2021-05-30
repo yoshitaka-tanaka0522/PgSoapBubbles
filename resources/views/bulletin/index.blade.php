@@ -38,16 +38,10 @@
                           @foreach($bulletinBoards as $bulletin)
                           <tr>
                             <th>{{ $bulletin->id }}</th>
-                            <td>{{ $bulletin->language_Type }}</td>
+                            <td>{{ $bulletin->language_type }}</td>
                             <td>{{ $bulletin->account_name }}</td>
                             <td>{{ $bulletin->title }}</td>
-                            {{-- 詳細を見るためにはidを指定する必要がある。
-                            https://readouble.com/laravel/8.x/ja/routing.html(名前付きルートがパラメータを定義している場合) --}}
                             <td><a href="{{ route('bulletin.show',['id' => $bulletin->id ]) }}">詳細を見る</td>
-                            <td></td>
-                            {{-- <td>{{ $bulletin->question }}</td>
-                            <td>{{ $bulletin->question_id }}</td>
-                            <td>{{ $bulletin->created_at }}</td>                           --}}
                           </tr>                  
                           @endforeach
                         </tbody>

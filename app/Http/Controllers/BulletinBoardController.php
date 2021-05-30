@@ -20,12 +20,13 @@ class BulletinBoardController extends Controller
         // →https://readouble.com/laravel/8.x/ja/eloquent.html
         // items->attributesにtableのデータが入っている。
         //  $bulletinBoards = BulletinBoard::all();
+        //今回は全データ持ってきたいわけではないので、クエリビルダを使用する
         //  dd($bulletinBoards);
         // ----------------------------------------------------------
         //------Facadesを使用する場合(クエリビルダ)------------------------------
         //use Illuminate\Support\Facades\DB;を追加
         $bulletinBoards = DB::table('bulletin_boards')
-        ->select('id','language_Type','account_name','title','question','question_id','created_at')
+        ->select('id','language_type','account_name','title','question','question_id','created_at')
         ->get();
         return view('bulletin.index',compact('bulletinBoards'));
     }
@@ -50,6 +51,8 @@ class BulletinBoardController extends Controller
     public function store(Request $request)
     {
         //https://readouble.com/laravel/8.x/ja/requests.html
+        //入力されたデータを取得するのは依存性の注入リクエスト、
+        //データを保存する際はeloquentのメソッドを使用https://qiita.com/shosho/items/5ca6bdb880b130260586
         $bulletin = new BulletinBoard;
         $bulletin->language_type = $request->input('language_type');
         $bulletin->account_name = $request->input('account_name');
@@ -78,7 +81,8 @@ class BulletinBoardController extends Controller
         // if($bulletin->age === 1) {
         //     $gender = '女性';
         // }
-        return view('bulletin.show',compact('bulletin'));
+        $comments = $bulletin->comments()->get();
+        return view('bulletin.show',compact('bulletin','comments'));
         //もし↑のgederを渡したかったら以下のように書く
         // return view('bulletin.show',compact('bulletin','gender'));
     }
